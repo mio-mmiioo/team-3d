@@ -53,6 +53,9 @@
     <ClCompile Include="Library\Object3D.cpp">
       <Filter>Library</Filter>
     </ClCompile>
+    <ClCompile Include="Library\Input.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Screen.h" />
@@ -118,6 +121,9 @@
       <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="Library\Object3D.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Input.h">
       <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
