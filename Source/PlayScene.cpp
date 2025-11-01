@@ -1,15 +1,17 @@
 #include "PlayScene.h"
 #include "Axis.h"
+#include "Camera.h"
 
 PlayScene::PlayScene()
 {
-	SetCameraPositionAndTarget_UpVecY(VECTOR3(50, 100, -300), VECTOR3(0, 0, 0));//Y‚ªŒÅ’è‚³‚ê‚Ä‚éƒJƒƒ‰
-
+	//SetCameraPositionAndTarget_UpVecY(VECTOR3(50, 100, -300), VECTOR3(0, 0, 0));//Y‚ªŒÅ’è‚³‚ê‚Ä‚éƒJƒƒ‰
+	new Camera();
+	new Axis();
 }
 
 PlayScene::~PlayScene()
 {
-	new Axis();
+
 }
 
 void PlayScene::Update()
