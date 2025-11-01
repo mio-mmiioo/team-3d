@@ -27,13 +27,13 @@ public:
 
 private:
 	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename); // ステージデータをセットするための関数
-	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX, int startY);
+	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX);
 	void CreateStage(int number, int level);		// ステージを作成する
 	bool IsWall(VECTOR3 pos);						// 壁かどうか
 
 	std::vector<std::vector<int>> baseStage_;		// ステージの両端の部分
 	std::vector<std::vector<int>> currentStage_;	// 現在のステージ
 
-	int hImage_;
+	int hModel_;
 	bool isPlayerAlive_;
 };
