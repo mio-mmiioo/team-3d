@@ -1,4 +1,5 @@
 #include "PlayScene.h"
+#include "Axis.h"
 
 PlayScene::PlayScene()
 {
@@ -8,6 +9,7 @@ PlayScene::PlayScene()
 
 PlayScene::~PlayScene()
 {
+	new Axis();
 }
 
 void PlayScene::Update()
