@@ -1,11 +1,8 @@
 #include "TitleScene.h"
 #include <fstream>
 
-using namespace std;
-
 TitleScene::TitleScene()
 {
-
 }
 
 TitleScene::~TitleScene()
