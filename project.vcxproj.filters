@@ -50,6 +50,9 @@
     <ClCompile Include="Library\Time.cpp">
       <Filter>Library</Filter>
     </ClCompile>
+    <ClCompile Include="Library\Object3D.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Screen.h" />
@@ -112,6 +115,9 @@
       <Filter>Library</Filter>
     </ClInclude>
     <ClInclude Include="Library\myDxLib.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Object3D.h">
       <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
