@@ -12,7 +12,8 @@ BaseStage::BaseStage()
 {
 	hModel_ = MV1LoadModel("data/model/RedBrickBlock.mv1");
 	assert(hModel_ > 0);
-	transform_.scale_ = VECTOR3(0.64f, 0.64f, 0.64f); // 試作品2Dとサイズを合わせる
+	transform_.scale_ = transform_.scale_ * 0.64f; // 試作品2Dとサイズを合わせる
+	MV1SetScale(hModel_, transform_.scale_);
 	isPlayerAlive_ = true; // プレイヤー生きてる
 	SetStageData(&baseStage_, "data/stage/baseStage.csv");
 	SetStageData(&currentStage_, "data/stage/stage000.csv", 4);
@@ -31,8 +32,7 @@ void BaseStage::Draw()
 	for (int y = 0; y < baseStage_.size(); y++) {
 		for (int x = 0; x < baseStage_[y].size(); x++) {
 			int c = baseStage_[y][x];
-			VECTOR3 pos1 = VECTOR3(x * 64.0f, (baseStage_.size() - y - 1) * 640.0f, 0);
-			VECTOR3 pos2 = pos1 + VECTOR3(64.0f, 64.0f, 64.0f);
+			VECTOR3 pos1 = VECTOR3(x * BASESTAGE::MODEL_WIDTH + BASESTAGE::MODEL_WIDTH / 2, (baseStage_.size() - y - 1) * BASESTAGE::MODEL_HEIGHT, 32.0f);
 			if (c == 3) {
 				MV1SetPosition(hModel_, pos1);
 				MV1DrawModel(hModel_);
@@ -42,6 +42,18 @@ void BaseStage::Draw()
 				MV1SetPosition(hModel_, pos1);
 				MV1DrawModel(hModel_);
 			}
+		}
+	}
+
+	// 基準線を描画 不要になったら消す
+	for (int y = 0; y < baseStage_.size(); y++) {
+		for (int x = 0; x < baseStage_[0].size() + 1; x++) {
+			VECTOR3 pos1 = { x * BASESTAGE::MODEL_WIDTH, 0, 0 };
+			VECTOR3 pos2 = { x * BASESTAGE::MODEL_WIDTH, 720.0f, 0 };
+			VECTOR3 pos3 = { 0, y * BASESTAGE::MODEL_HEIGHT,0 };
+			VECTOR3 pos4 = { 1280.0f, y * BASESTAGE::MODEL_HEIGHT, 0 };
+			DrawLine3D(pos1, pos2, GetColor(255, 255, 255));
+			DrawLine3D(pos3, pos4, GetColor(255, 255, 255));
 		}
 	}
 }
@@ -85,10 +97,8 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 
 	for (int y = 0; y < stage->size(); y++) {
 		for (int x = 0; x < (*stage)[y].size(); x++) {
-			int c = (*stage)[y][x];
+			int c = (*stage)[stage->size() - y - 1][x];
 			if (c == 1) {
-				int px = x * BASESTAGE::MODEL_WIDTH + BASESTAGE::MODEL_WIDTH / 2.0f;
-				int py = y * BASESTAGE::MODEL_HEIGHT + BASESTAGE::MODEL_HEIGHT / 2.0f;
 				// Player生成
 			}
 		}
@@ -111,19 +121,18 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 
 	for (int y = 0; y < stage->size(); y++) {
 		for (int x = 0; x < (*stage)[y].size(); x++) {
-			int c = (*stage)[y][x];
-			baseStage_[y][x + startX] = (*stage)[y][x];
-			/*if (c == 1) {
-				int px = x * imageSize_.x + imageSize_.x / 2.0f;
-				int py = y * imageSize_.y + imageSize_.y / 2.0f;
-				new Player(VECTOR2(px, py));
-			}*/
+			baseStage_[stage->size() - y - 1][x + startX] = (*stage)[stage->size() - y - 1][x];
 		}
 	}
 }
 
 void BaseStage::CreateStage(int number, int level)
 {
+	// playerの現在のレベルなどからステージを選択する player作成後にnextStageNumberに値を代入する
+	int nextStageNumber = 0;
+
+	sprintf_s<64>(BASESTAGE::filename, "data/stage/stage%03.csv", nextStageNumber);
+	SetStageData(&currentStage_, BASESTAGE::filename, 4);
 }
 
 bool BaseStage::IsWall(VECTOR3 pos)
