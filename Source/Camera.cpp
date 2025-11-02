@@ -1,14 +1,14 @@
 #include "Camera.h"
+#include "Screen.h"
 
 namespace {
-	static float DISTANCE = 700.0f;		// ステージからの距離
-	static float LOOK_HIEGHT = 180.0f;	// 視点の高さ
+	const float DISTANCE = 700.0f;		// ステージからの距離
 };
 
 Camera::Camera()
 {
-	cameraPosition_ = VECTOR3(640.0f, 384.0f, -DISTANCE);
-	targetPosition_ = VECTOR3(640.0f, 384.0f, 0);
+	cameraPosition_ = VECTOR3(Screen::WIDTH / 2.0f, Screen::HEIGHT / 2.0f, -DISTANCE);
+	targetPosition_ = VECTOR3(Screen::WIDTH / 2.0f, Screen::HEIGHT / 2.0f, 0);
 	SetCameraPositionAndTarget_UpVecY(cameraPosition_, targetPosition_);
 }
 
