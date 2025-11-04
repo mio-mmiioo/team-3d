@@ -159,6 +159,7 @@
     <ClInclude Include="Source\BaseStage.h" />
     <ClInclude Include="Source\BootScene.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\ResultScene.h" />
     <ClInclude Include="Source\Screen.h" />
     <ClInclude Include="Source\PlayScene.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Source\BaseStage.cpp" />
     <ClCompile Include="Source\BootScene.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayScene.cpp" />
     <ClCompile Include="Source\ResultScene.cpp" />
     <ClCompile Include="Source\SceneFactory.cpp" />

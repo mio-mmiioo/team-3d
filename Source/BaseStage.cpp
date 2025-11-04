@@ -1,6 +1,7 @@
 #include "BaseStage.h"
 #include <assert.h>
 #include "../Library/CsvReader.h"
+#include "Player.h"
 
 namespace BASESTAGE {
 	char filename[64];					// ê∂ê¨Ç∑ÇÈcurrentStage_ÇÃÉtÉ@ÉCÉãñº
@@ -102,7 +103,9 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 		for (int x = 0; x < (*stage)[y].size(); x++) {
 			int c = (*stage)[stage->size() - y - 1][x];
 			if (c == 1) {
-				// Playerê∂ê¨
+				float posX = x * BASESTAGE::MODEL_WIDTH;
+				float posY = y * BASESTAGE::MODEL_HEIGHT;
+				new Player(VECTOR3(posX, posY, 0.0f));
 			}
 		}
 	}
