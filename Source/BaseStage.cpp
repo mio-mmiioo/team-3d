@@ -62,24 +62,50 @@ void BaseStage::Draw()
 	}
 }
 
-int BaseStage::CheckRight(VECTOR3 pos)
+float BaseStage::CheckRight(VECTOR3 pos)
 {
-	return 0;
+	if (IsWall(pos) == false) {
+		return 0;
+	}
+
+	int x = pos.x / BASESTAGE::MODEL_WIDTH;
+	float dx = pos.x - x * BASESTAGE::MODEL_WIDTH;
+	return dx + 1;
 }
 
-int BaseStage::CheckLeft(VECTOR3 pos)
+float BaseStage::CheckLeft(VECTOR3 pos)
 {
-	return 0;
+	if (IsWall(pos) == false) {
+		return 0;
+	}
+
+	int x = pos.x / BASESTAGE::MODEL_WIDTH;
+	float dx = pos.x - x * BASESTAGE::MODEL_WIDTH;
+	return dx - BASESTAGE::MODEL_WIDTH;
 }
 
-int BaseStage::CheckDown(VECTOR3 pos)
+float BaseStage::CheckDown(VECTOR3 pos)
 {
-	return 0;
+	if (IsWall(pos) == false) {
+		return 0;
+	}
+
+	int y = pos.y / BASESTAGE::MODEL_HEIGHT;
+	float dy = pos.y - y * BASESTAGE::MODEL_HEIGHT;
+
+	return dy - BASESTAGE::MODEL_HEIGHT;
 }
 
-int BaseStage::CheckUp(VECTOR3 pos)
+float BaseStage::CheckUp(VECTOR3 pos)
 {
-	return 0;
+	if (IsWall(pos) == false) {
+		return 0;
+	}
+
+	int y = pos.y / BASESTAGE::MODEL_HEIGHT;
+	float dy = pos.y - y * BASESTAGE::MODEL_HEIGHT;
+
+	return dy + 1;
 }
 
 void BaseStage::ChooseStage(int level)
@@ -144,5 +170,20 @@ void BaseStage::CreateStage(int number, int level)
 
 bool BaseStage::IsWall(VECTOR3 pos)
 {
-	return false;
+	// チップの場所を特定する
+	int x = pos.x / BASESTAGE::MODEL_WIDTH;
+	int y = pos.y / BASESTAGE::MODEL_HEIGHT;
+	if (y < 0 || y >= baseStage_.size()) {
+		return false;
+	}
+	if (x < 0 || x >= baseStage_[y].size()) {
+		return false;
+	}
+	// チップの番号を見て、壁かどうか確定する
+	switch (baseStage_[baseStage_.size() - y - 1][x]) {
+	case 0:
+	case 1:
+		return false;
+	}
+	return true;
 }

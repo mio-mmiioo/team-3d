@@ -15,10 +15,10 @@ public:
 	void Draw() override;
 
 	// 当たり判定関連
-	int CheckRight(VECTOR3 pos);
-	int CheckLeft(VECTOR3 pos);
-	int CheckDown(VECTOR3 pos);
-	int CheckUp(VECTOR3 pos);
+	float CheckRight(VECTOR3 pos);
+	float CheckLeft(VECTOR3 pos);
+	float CheckDown(VECTOR3 pos);
+	float CheckUp(VECTOR3 pos);
 
 	void ChooseStage(int level); // ランダムな値を入手して次のステージを生成するための変数
 
