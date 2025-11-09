@@ -2,14 +2,20 @@
 #include "BaseStage.h"
 #include <assert.h>
 #include "../Library/Input.h"
+#include "Screen.h"
 
+// 外部データ化するときに削除される
 namespace PLAYER {
-	const float MOVE_SPEED = 5.0f; // プレイヤーの移動速度 外部データ化するときに削除する
-	const float WIDTH = 30.0f; // プレイヤーの横幅
-	const float HEIGHT = 60.0f; // プレイヤーの縦幅
+	const float MOVE_SPEED = 5.0f;		// プレイヤーの移動速度
+	const float WIDTH = 30.0f;			// プレイヤーの横幅
+	const float HEIGHT = 60.0f;			// プレイヤーの縦幅
 
-	const float GRAVITY = 0.05f;
-	const int JUMP_BLOCK_HEIGHT = 3;//ブロック何個分
+	const float GRAVITY = 0.098f;
+	const int JUMP_BLOCK_HEIGHT = 3;	// ブロック何個分
+
+	// プレイヤーの移動制限
+	const float LEFT_LIMIT = 0.0f + PLAYER::WIDTH / 2;					// 左( x )
+	const float RIGHT_LIMIT = (float)Screen::WIDTH - PLAYER::WIDTH / 2; // 右( x )
 }
 
 Player::Player(VECTOR3 pos)
@@ -131,7 +137,17 @@ void Player::Update()
 			}
 		}
 
-		// 画面外にプレイヤーを行かせないように位置を修正
+		// 画面外にプレイヤーを行かせないように位置を修正 (x軸のみ)
+		{
+			if (transform_.position_.x < PLAYER::LEFT_LIMIT)
+			{
+				transform_.position_.x = PLAYER::LEFT_LIMIT;
+			}
+			else if (transform_.position_.x > PLAYER::RIGHT_LIMIT)
+			{
+				transform_.position_.x = PLAYER::RIGHT_LIMIT;
+			}
+		}
 	}
 
 	// クリア判定など
