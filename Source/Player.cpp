@@ -4,9 +4,12 @@
 #include "../Library/Input.h"
 
 namespace PLAYER {
-	float moveSpeed = 5.0f; // プレイヤーの移動速度 外部データ化するときに削除する
+	const float MOVE_SPEED = 5.0f; // プレイヤーの移動速度 外部データ化するときに削除する
 	const float WIDTH = 30.0f; // プレイヤーの横幅
 	const float HEIGHT = 60.0f; // プレイヤーの縦幅
+
+	const float GRAVITY = 0.05f;
+	const int JUMP_BLOCK_HEIGHT = 3;//ブロック何個分
 }
 
 Player::Player(VECTOR3 pos)
@@ -16,6 +19,14 @@ Player::Player(VECTOR3 pos)
 	transform_.position_ = pos;
 	transform_.scale_ = transform_.scale_ * 0.4f;
 	MV1SetScale(hModel_, transform_.scale_);
+
+	moveSpeed_ = PLAYER::MOVE_SPEED;
+	isOnGround_ = false;
+	velocityY_ = 0.0f;
+	gravity_ = PLAYER::GRAVITY;
+	jumpHeight_ = (float)PLAYER::JUMP_BLOCK_HEIGHT * 64.0f; // ( 飛べる高さ ) = ( マスの数 ) * ( 1マスのサイズ )
+	jumpV0_ = -sqrtf(2.0f * gravity_ * jumpHeight_);
+
 }
 
 Player::~Player()
@@ -28,15 +39,17 @@ void Player::Update()
 
 	// キーの入力
 	{
-		if (Input::IsKeepKeyDown(KEY_INPUT_W))
+		// ジャンプ
+		if (isOnGround_ == true)
 		{
-			move.y += 1;
+			if (CheckHitKey(KEY_INPUT_SPACE))
+			{
+				velocityY_ = jumpV0_;
+			}
 		}
-		else if (Input::IsKeepKeyDown(KEY_INPUT_S))
-		{
-			move.y -= 1;
-		}
-		else if (Input::IsKeepKeyDown(KEY_INPUT_D))
+
+		// 左右移動
+		if (Input::IsKeepKeyDown(KEY_INPUT_D))
 		{
 			move.x += 1;
 		}
@@ -46,8 +59,9 @@ void Player::Update()
 		}
 	}
 
-	transform_.position_ = transform_.position_ + move * PLAYER::moveSpeed;
-
+	// 位置のセット
+	transform_.position_ = transform_.position_ + move * moveSpeed_;
+	
 	BaseStage* baseStage = FindGameObject<BaseStage>();
 
 	// ステージとの当たり判定・位置修正
@@ -77,20 +91,24 @@ void Player::Update()
 		}
 
 		// 重力をかける
-		
-		// 上下のめり込み判定 後に重力関連の処理
+		transform_.position_.y -= velocityY_;
+		velocityY_ += gravity_;
+		isOnGround_ = false;
 
-		if (move.y > 0)
+		// 上下のめり込み判定
+		if (velocityY_ < 0.0f)
 		{
 			push = baseStage->CheckUp(transform_.position_ + VECTOR3(PLAYER::WIDTH / 2, PLAYER::HEIGHT, 0));//右上
 			if (push > 0)
 			{
+				velocityY_ = 0.0f;
 				transform_.position_.y -= push + 1;
 			}
 
 			push = baseStage->CheckUp(transform_.position_ + VECTOR3(-PLAYER::WIDTH / 2, PLAYER::HEIGHT, 0));//左上
 			if (push > 0)
 			{
+				velocityY_ = 0.0f;
 				transform_.position_.y -= push + 1;
 			}
 		}
@@ -99,12 +117,16 @@ void Player::Update()
 			push = baseStage->CheckDown(transform_.position_ + VECTOR3(PLAYER::WIDTH / 2, 0 - 1, 0));//右下
 			if (push < 0)
 			{
+				isOnGround_ = true;
+				velocityY_ = 0.0f;
 				transform_.position_.y -= push - 1;
 			}
 
 			push = baseStage->CheckDown(transform_.position_ + VECTOR3(-PLAYER::WIDTH / 2, 0 - 1, 0));//左下
 			if (push < 0)
 			{
+				isOnGround_ = true;
+				velocityY_ = 0.0f;
 				transform_.position_.y -= push - 1;
 			}
 		}
