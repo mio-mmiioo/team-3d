@@ -26,4 +26,5 @@ void PlayScene::Draw()
 {
 	DrawString(0, 0, "PLAY SCENE", GetColor(255, 255, 255));
 	DrawString(100, 400, "Push [R]Key To Result", GetColor(255, 255, 255));
+	DrawString(100, 100, "ŽŽ‚µ‚¾‚æ", GetColor(255, 255, 255));
 }
