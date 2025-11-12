@@ -27,7 +27,7 @@ public:
 
 private:
 	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename); // ステージデータをセットするための関数
-	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX);
+	void SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX, int startY);
 	void CreateStage(int number, int level);		// ステージを作成する
 	bool IsWall(VECTOR3 pos);						// 壁かどうか
 

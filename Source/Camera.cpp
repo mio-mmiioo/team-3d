@@ -2,7 +2,7 @@
 #include "Screen.h"
 
 namespace {
-	const float DISTANCE = 700.0f;		// ステージからの距離
+	const float DISTANCE = 1000.0f;		// ステージからの距離
 };
 
 Camera::Camera()

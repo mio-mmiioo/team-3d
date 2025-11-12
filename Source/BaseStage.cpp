@@ -8,7 +8,8 @@ namespace BASESTAGE {
 	const float MODEL_WIDTH = 64.0f;	// モデルの横幅
 	const float MODEL_HEIGHT = 64.0f;	// モデルの縦幅
 	const float MODEL_SCALE = 0.64f;	// モデルのスケール
-	const float STAGE_START_X = 4;		// 切り替わるステージのx座標
+	const float STAGE_START_X = 4;		// 切り替わるステージの開始位置のx座標
+	const float STAGE_START_Y = 4;		// 切り替わるステージの開始位置のy座標
 }
 
 BaseStage::BaseStage()
@@ -19,7 +20,7 @@ BaseStage::BaseStage()
 	MV1SetScale(hModel_, transform_.scale_);
 	isPlayerAlive_ = true; // プレイヤー生きてる
 	SetStageData(&baseStage_, "data/stage/baseStage.csv");
-	SetStageData(&currentStage_, "data/stage/stage000.csv", BASESTAGE::STAGE_START_X);
+	SetStageData(&currentStage_, "data/stage/stage000.csv", BASESTAGE::STAGE_START_X, BASESTAGE::STAGE_START_Y);
 }
 
 BaseStage::~BaseStage()
@@ -38,9 +39,7 @@ void BaseStage::Draw()
 			VECTOR3 pos1 = VECTOR3(x * BASESTAGE::MODEL_WIDTH + BASESTAGE::MODEL_WIDTH / 2, (baseStage_.size() - y - 1) * BASESTAGE::MODEL_HEIGHT, 0.0f);
 			switch (baseStage_[y][x])
 			{
-			case 3:
-				// 4と同じ扱いにするために break を書かない
-			case 4:
+			case 2:
 				MV1SetPosition(hModel_, pos1);
 				MV1DrawModel(hModel_);
 				break;
@@ -128,7 +127,7 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 	for (int y = 0; y < stage->size(); y++) {
 		for (int x = 0; x < (*stage)[y].size(); x++) {
 			int c = (*stage)[stage->size() - y - 1][x];
-			if (c == 1) {
+			if (c == 0) {
 				float posX = x * BASESTAGE::MODEL_WIDTH;
 				float posY = y * BASESTAGE::MODEL_HEIGHT;
 				new Player(VECTOR3(posX, posY, 0.0f));
@@ -137,7 +136,7 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 	}
 }
 
-void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX)
+void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* filename, int startX, int startY)
 {
 	stage->clear();
 	CsvReader* csv = new CsvReader(filename);
@@ -153,7 +152,7 @@ void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* f
 
 	for (int y = 0; y < stage->size(); y++) {
 		for (int x = 0; x < (*stage)[y].size(); x++) {
-			baseStage_[stage->size() - y - 1][x + startX] = (*stage)[stage->size() - y - 1][x];
+			baseStage_[stage->size() - y - 1 + startY][x + startX] = (*stage)[stage->size() - y - 1][x];
 		}
 	}
 }
@@ -165,7 +164,7 @@ void BaseStage::CreateStage(int number, int level)
 	int nextStageNumber = 0;
 
 	sprintf_s<64>(BASESTAGE::filename, "data/stage/stage%03.csv", nextStageNumber);
-	SetStageData(&currentStage_, BASESTAGE::filename, BASESTAGE::STAGE_START_X);
+	SetStageData(&currentStage_, BASESTAGE::filename, BASESTAGE::STAGE_START_X, BASESTAGE::STAGE_START_Y);
 }
 
 bool BaseStage::IsWall(VECTOR3 pos)
