@@ -3,8 +3,8 @@
 #include <vector>
 
 namespace BASESTAGE {
-	const int LINE_POS_LEFT = 256;  // ¶‚Ìü
-	const int LINE_POS_RIGHT = 1024; // ‰E‚Ìü
+	const int LINE_POS_LEFT = 0 + 64 * 4;  // ¶‚Ìü
+	const int LINE_POS_RIGHT = 1920 - 64 * 4; // ‰E‚Ìü
 }
 
 class BaseStage : public Object3D {

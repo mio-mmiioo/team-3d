@@ -48,7 +48,7 @@ void Player::Update()
 		// ジャンプ
 		if (isOnGround_ == true)
 		{
-			if (CheckHitKey(KEY_INPUT_SPACE))
+			if (Input::IsKeepKeyDown(KEY_INPUT_SPACE))
 			{
 				velocityY_ = jumpV0_;
 			}
@@ -125,7 +125,7 @@ void Player::Update()
 			{
 				isOnGround_ = true;
 				velocityY_ = 0.0f;
-				transform_.position_.y -= push - 1;
+				transform_.position_.y -= push;
 			}
 
 			push = baseStage->CheckDown(transform_.position_ + VECTOR3(-PLAYER::WIDTH / 2, 0 - 1, 0));//左下
@@ -133,7 +133,7 @@ void Player::Update()
 			{
 				isOnGround_ = true;
 				velocityY_ = 0.0f;
-				transform_.position_.y -= push - 1;
+				transform_.position_.y -= push;
 			}
 		}
 
@@ -171,6 +171,12 @@ void Player::Draw()
 	DrawLine3D(leftTop, leftTop + VECTOR3(0, -PLAYER::HEIGHT, 0), GetColor(255, 0, 0)); // 左辺
 	DrawLine3D(leftTop + VECTOR3(PLAYER::WIDTH, 0, 0), leftTop + VECTOR3(PLAYER::WIDTH, -PLAYER::HEIGHT, 0), GetColor(255, 0, 0)); // 右辺
 	DrawLine3D(leftTop + VECTOR3(0, -PLAYER::HEIGHT, 0), leftTop + VECTOR3(PLAYER::WIDTH, -PLAYER::HEIGHT, 0), GetColor(255, 0, 0)); // 底辺
+
+	// こえる線の表示
+	VECTOR3 lineLeftTop = { BASESTAGE::LINE_POS_LEFT, 0, -32 };
+	VECTOR3 lineRightTop = { BASESTAGE::LINE_POS_RIGHT, 0, -32 };
+	DrawLine3D(lineLeftTop, lineLeftTop + VECTOR3(0, Screen::HEIGHT, 0), GetColor(255, 0, 0));
+	DrawLine3D(lineRightTop, lineRightTop + VECTOR3(0, Screen::HEIGHT, 0), GetColor(255, 0, 0));
 
 	// クリアカウント・レベルアップゲージ
 
