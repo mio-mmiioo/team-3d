@@ -3,6 +3,7 @@
 #include "ObjectManager.h"
 #include "Time.h"
 #include "Input.h"
+#include "../Source/Sound.h"
 #include <DxLib.h>
 
 void AppInit()
@@ -10,6 +11,7 @@ void AppInit()
 	ObjectManager::Init();
 	SceneManager::Init();
 	Time::Init();
+	Sound::Init();
 }
 
 void AppUpdate()
