@@ -15,4 +15,15 @@ private:
 	float gravity_; // 重力
 	float jumpHeight_;
 	float jumpV0_;
+
+	// 音関連
+	void SoundShuttleRun();
+
+	float timer_;			// 9の倍数にして
+	float soundTimer_;		// timer_を9等分したくらいの時間
+	int soundCounter_;		// 音階で鳴らすためのカウンター
+
+	// カウント関連
+	bool isGoRight_;		// true→右に進んでいる false→左に進んでいる
+
 };

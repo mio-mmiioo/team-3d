@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "../Library/Input.h"
 #include "Screen.h"
+#include "Sound.h"
 
 // 外部データ化するときに削除される
 namespace PLAYER {
@@ -33,6 +34,14 @@ Player::Player(VECTOR3 pos)
 	jumpHeight_ = (float)PLAYER::JUMP_BLOCK_HEIGHT * 64.0f; // ( 飛べる高さ ) = ( マスの数 ) * ( 1マスのサイズ )
 	jumpV0_ = -sqrtf(2.0f * gravity_ * jumpHeight_);
 
+	// 音関連
+	timer_ = 9.0f;
+	soundTimer_ = 1.0f;
+	soundCounter_ = 0;
+
+	// カウント関連
+	isGoRight_ = true; // 最初は左から右に向かう
+
 }
 
 Player::~Player()
@@ -41,6 +50,8 @@ Player::~Player()
 
 void Player::Update()
 {
+	timer_ -= Time::DeltaTime();
+	SoundShuttleRun();
 	VECTOR3 move;
 
 	// キーの入力
@@ -152,11 +163,26 @@ void Player::Update()
 
 	// クリア判定など
 	{
-		// ステージをクリアできたか確認
+		if (timer_ <= 0)
+		{
+			// ステージをクリアできたか確認
 
-		// ステージをセット
+			// ステージをセット
 
-		// 向かう方向を変更
+			// 向かう方向を変更
+			if (isGoRight_ == true)
+			{
+				isGoRight_ = false;
+				PlaySoundMem(Sound::scale[1], DX_PLAYTYPE_BACK, TRUE);
+			}
+			else
+			{
+				isGoRight_ = true;
+				PlaySoundMem(Sound::scale[8], DX_PLAYTYPE_BACK, TRUE);
+			}
+
+			timer_ = 9.0f;
+		}
 	}
 	MV1SetPosition(hModel_, transform_.position_);
 }
@@ -181,4 +207,22 @@ void Player::Draw()
 	// クリアカウント・レベルアップゲージ
 
 	// HPの表示
+}
+
+void Player::SoundShuttleRun()
+{
+	soundTimer_ -= Time::DeltaTime();
+	if (soundTimer_ <= 0)
+	{
+		if (isGoRight_ == true)
+		{
+			soundCounter_ += 1;
+		}
+		else
+		{
+			soundCounter_ -= 1;
+		}
+		PlaySoundMem(Sound::scale[soundCounter_], DX_PLAYTYPE_BACK, TRUE);
+		soundTimer_ = soundTimer_ + 1.0f;
+	}
 }
