@@ -7,6 +7,8 @@
 
 // 外部データ化するときに削除される
 namespace PLAYER {
+	const int MAX_HP = 2;
+
 	const float MOVE_SPEED = 5.0f;		// プレイヤーの移動速度
 	const float WIDTH = 30.0f;			// プレイヤーの横幅
 	const float HEIGHT = 60.0f;			// プレイヤーの縦幅
@@ -27,6 +29,7 @@ Player::Player(VECTOR3 pos)
 	transform_.scale_ = transform_.scale_ * 0.4f;
 	MV1SetScale(hModel_, transform_.scale_);
 
+	hp_ = PLAYER::MAX_HP;
 	moveSpeed_ = PLAYER::MOVE_SPEED;
 	isOnGround_ = false;
 	velocityY_ = 0.0f;
@@ -41,7 +44,7 @@ Player::Player(VECTOR3 pos)
 
 	// カウント関連
 	isGoRight_ = true; // 最初は左から右に向かう
-
+	counter_ = 0;
 }
 
 Player::~Player()
@@ -166,8 +169,37 @@ void Player::Update()
 		if (timer_ <= 0)
 		{
 			// ステージをクリアできたか確認
+			if (IsClear() == false)
+			{
+				hp_ -= 1;
 
+				// 本来のゴール地点にワープさせる
+				if (isGoRight_ == true)
+				{
+					transform_.position_.x = BASESTAGE::LINE_POS_RIGHT + PLAYER::WIDTH;
+					transform_.position_.y =64 * 2;
+				}
+				else
+				{
+					transform_.position_.x = BASESTAGE::LINE_POS_LEFT - PLAYER::WIDTH;
+					transform_.position_.y = 64 * 2;
+				}
+			}
+			else
+			{
+				if (hp_ < PLAYER::MAX_HP)
+				{
+					hp_ = PLAYER::MAX_HP;
+				}
+			}
+
+			if (hp_ <= 0)
+			{
+				baseStage->SetPlayerAlive(false);
+				DestroyMe();
+			}
 			// ステージをセット
+			baseStage->ChooseStage(1);
 
 			// 向かう方向を変更
 			if (isGoRight_ == true)
@@ -205,8 +237,32 @@ void Player::Draw()
 	DrawLine3D(lineRightTop, lineRightTop + VECTOR3(0, Screen::HEIGHT, 0), GetColor(255, 0, 0));
 
 	// クリアカウント・レベルアップゲージ
+	DrawFormatString(100, 130, GetColor(255, 255, 255), "Count:%d", counter_);
 
 	// HPの表示
+	DrawFormatString(100, 160, GetColor(255, 255, 255), "HP:%d", hp_);
+}
+
+bool Player::IsClear()
+{
+	counter_ += 1;
+	if (isGoRight_ == true) // 右に進んでいる場合
+	{
+		if (BASESTAGE::LINE_POS_RIGHT <= transform_.position_.x)
+		{
+			return true;
+		}
+	}
+	else // 左に進んでいる場合
+	{
+		if (BASESTAGE::LINE_POS_LEFT >= transform_.position_.x)
+		{
+			return true;
+		}
+	}
+	return false;
+	
+return false;
 }
 
 void Player::SoundShuttleRun()

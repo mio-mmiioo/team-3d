@@ -25,10 +25,15 @@ BaseStage::BaseStage()
 
 BaseStage::~BaseStage()
 {
+	SceneManager::ChangeScene("RESULT");
 }
 
 void BaseStage::Update()
 {
+	if (isPlayerAlive_ == false)
+	{
+		DestroyMe();
+	}
 }
 
 void BaseStage::Draw()
@@ -49,16 +54,16 @@ void BaseStage::Draw()
 	}
 
 	// Šî€ü‚ğ•`‰æ •s—v‚É‚È‚Á‚½‚çÁ‚·
-	for (int y = 0; y < baseStage_.size() + 1; y++) {
-		for (int x = 0; x < baseStage_[0].size() + 1; x++) {
-			VECTOR3 pos1 = { x * BASESTAGE::MODEL_WIDTH, 0, -32.0f };
-			VECTOR3 pos2 = { x * BASESTAGE::MODEL_WIDTH, baseStage_.size() * BASESTAGE::MODEL_HEIGHT, -32.0f };
-			VECTOR3 pos3 = { 0, y * BASESTAGE::MODEL_HEIGHT, -32.0f };
-			VECTOR3 pos4 = { baseStage_[0].size() * BASESTAGE::MODEL_WIDTH, y * BASESTAGE::MODEL_HEIGHT, -32.0f };
-			DrawLine3D(pos1, pos2, GetColor(255, 255, 255));
-			DrawLine3D(pos3, pos4, GetColor(255, 255, 255));
-		}
-	}
+	//for (int y = 0; y < baseStage_.size() + 1; y++) {
+	//	for (int x = 0; x < baseStage_[0].size() + 1; x++) {
+	//		VECTOR3 pos1 = { x * BASESTAGE::MODEL_WIDTH, 0, -32.0f };
+	//		VECTOR3 pos2 = { x * BASESTAGE::MODEL_WIDTH, baseStage_.size() * BASESTAGE::MODEL_HEIGHT, -32.0f };
+	//		VECTOR3 pos3 = { 0, y * BASESTAGE::MODEL_HEIGHT, -32.0f };
+	//		VECTOR3 pos4 = { baseStage_[0].size() * BASESTAGE::MODEL_WIDTH, y * BASESTAGE::MODEL_HEIGHT, -32.0f };
+	//		DrawLine3D(pos1, pos2, GetColor(255, 255, 255));
+	//		DrawLine3D(pos3, pos4, GetColor(255, 255, 255));
+	//	}
+	//}
 }
 
 float BaseStage::CheckRight(VECTOR3 pos)
@@ -109,6 +114,8 @@ float BaseStage::CheckUp(VECTOR3 pos)
 
 void BaseStage::ChooseStage(int level)
 {
+	// ˆ—‚Ü‚¾‘‚¢‚Ä‚È‚¢
+	CreateStage(0, level);
 }
 
 void BaseStage::SetStageData(std::vector<std::vector<int>>* stage, const char* filename)

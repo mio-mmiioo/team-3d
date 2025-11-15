@@ -8,6 +8,9 @@ public:
 	void Update() override;
 	void Draw() override;
 private:
+	bool IsClear();
+
+	int hp_;
 	float moveSpeed_;
 
 	bool isOnGround_; // 地面についている→true
@@ -25,5 +28,5 @@ private:
 
 	// カウント関連
 	bool isGoRight_;		// true→右に進んでいる false→左に進んでいる
-
+	int counter_;			// ステージをクリアしたカウント
 };
