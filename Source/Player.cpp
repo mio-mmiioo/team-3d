@@ -45,6 +45,10 @@ Player::Player(VECTOR3 pos)
 	// カウント関連
 	isGoRight_ = true; // 最初は左から右に向かう
 	counter_ = 0;
+
+	startCountdown_ = 3.0f;
+	canCounterol_ = false;
+	startSound_ = false;
 }
 
 Player::~Player()
@@ -57,25 +61,49 @@ void Player::Update()
 	SoundShuttleRun();
 	VECTOR3 move;
 
-	// キーの入力
+	// カウントダウン処理
+	if (!canCounterol_)
 	{
-		// ジャンプ
-		if (isOnGround_ == true)
+		startCountdown_ -= Time::DeltaTime();
+
+		if (startCountdown_ <= 0 && startSound_ == false)
 		{
-			if (Input::IsKeepKeyDown(KEY_INPUT_SPACE))
-			{
-				velocityY_ = jumpV0_;
-			}
+			PlaySoundMem(Sound::se["Go"], DX_PLAYTYPE_BACK);
+			startSound_ = true;
 		}
 
-		// 左右移動
-		if (Input::IsKeepKeyDown(KEY_INPUT_D))
+		if (startCountdown_ <= 0)
 		{
-			move.x += 1;
+			canCounterol_ = true;
 		}
-		else if (Input::IsKeepKeyDown(KEY_INPUT_A))
+
+		MV1SetPosition(hModel_, transform_.position_);
+		return;
+	}
+
+	// キーの入力
+	{
+		if (canCounterol_)
 		{
-			move.x -= 1;
+
+			// ジャンプ
+			if (isOnGround_ == true)
+			{
+				if (Input::IsKeepKeyDown(KEY_INPUT_SPACE))
+				{
+					velocityY_ = jumpV0_;
+				}
+			}
+
+			// 左右移動
+			if (Input::IsKeepKeyDown(KEY_INPUT_D))
+			{
+				move.x += 1;
+			}
+			else if (Input::IsKeepKeyDown(KEY_INPUT_A))
+			{
+				move.x -= 1;
+			}
 		}
 	}
 
@@ -83,6 +111,7 @@ void Player::Update()
 	transform_.position_ = transform_.position_ + move * moveSpeed_;
 	
 	BaseStage* baseStage = FindGameObject<BaseStage>();
+
 
 	// ステージとの当たり判定・位置修正
 	{
@@ -222,6 +251,19 @@ void Player::Update()
 void Player::Draw()
 {
 	MV1DrawModel(hModel_);
+
+	if (canCounterol_ == false)
+	{
+		int count = ceil(startCountdown_);
+		DrawFormatString(Screen::WIDTH / 2 - 50, 200, GetColor(255, 255, 255), "%d", count);
+
+		if (startCountdown_ <= 0)
+		{
+			DrawFormatString(Screen::WIDTH / 2 - 100, 200, GetColor(255, 255, 255), "START");
+
+		}
+		return;
+	}
 
 	// プレイヤーの当たり判定の枠
 	VECTOR3 leftTop = transform_.position_ + VECTOR3(-PLAYER::WIDTH / 2, PLAYER::HEIGHT, 0);

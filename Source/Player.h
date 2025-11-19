@@ -19,6 +19,10 @@ private:
 	float jumpHeight_;
 	float jumpV0_;
 
+	float startCountdown_;
+	bool canCounterol_;
+	bool startSound_;
+
 	// ‰¹ŠÖ˜A
 	void SoundShuttleRun();
 
